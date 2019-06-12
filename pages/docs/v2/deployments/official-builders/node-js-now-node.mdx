@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T10:07:58.000Z'
+  lastEdited: '2019-06-12T11:19:44.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -176,7 +176,6 @@ module.exports = (req, res) => {
     return
   }
 
-  res.setHeader('content-type', 'text/plain')
   res.status(200)
   res.send(JSON.stringify(req.body, null, 4))
 }
