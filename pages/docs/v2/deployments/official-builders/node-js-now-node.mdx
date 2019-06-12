@@ -16,7 +16,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T08:26:22.000Z'
+  lastEdited: '2019-06-12T08:35:49.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -50,6 +50,46 @@ module.exports = (req, res) => {
   res.send(`Hello ${name}!`)
 }
 ```
+
+<Caption>An example serverless Node.js function.</Caption>
+
+<Note>
+  The <InlineCode>@now/node</InlineCode> Builder also supports{' '}
+  <P.B>
+    <GenericLink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">
+      asynchronous functions
+    </GenericLink>
+  </P.B>
+  , an example of which can be found in the <GenericLink href="/docs/v2/deployments/official-builders/node-js-now-node#request-and-response-objects">
+    Request and Response Objects
+  </GenericLink> section.
+</Note>
+
+The only step left is to define a build that will take this directory's entrypoint (`index.js`), build it and turn it into a lambda:
+
+```json
+{
+  "version": 2,
+  "builds": [{ "src": "api/hello/index.js", "use": "@now/node" }]
+}
+```
+
+<Caption>
+  An example <InlineCode>now.json</InlineCode> configuration using the{' '}
+  <InlineCode>@now/node</InlineCode> builder.
+</Caption>
+
+Our resulting deployment is here: <https://my-node-project-5gkn6kqfy.now.sh/>
+
+The example deployment above is open-source and you can view the code for it here: <https://my-node-project-5gkn6kqfy.now.sh/_src>
+
+You can pass query parameters to make the name change:
+
+<Image src={`https://assets.zeit.co/image/upload/v1545360454/front/docs/official-builders/serverless-node.png`}
+  width={1376/2}
+  height={882/2}
+/>
+<Caption>The lambda using the <InlineCode>name</InlineCode> query parameter to change the text using Node.js.</Caption>
 
 ## Request and Response Objects
 
@@ -109,8 +149,6 @@ module.exports = (req, res) => {
   </GenericLink>.
 </Note>
 
-### Using `req.body`
-
 ### Typescript support
 
 We provide types for the request and response objects.
@@ -127,59 +165,19 @@ Or if you're using `npm`:
 npm install @now/node --save-dev
 ```
 
-```ts
+```js
 import { NowRequest, NowResponse } from '@now/node'
 
 export default function(req: NowRequest, res: NowResponse) {
   const { name = 'World' } = req.query
-  res.send(`Hello ${name}!`)
+  res.send(\`Hello ${name}!\`)
 }
 ```
 
 <Caption>
-  Example "Hello World" Typescript lambda using the `req.query` helper
+  Example "Hello World" Typescript lambda using the{' '}
+  <InlineCode>req.query</InlineCode> helper
 </Caption>
-
-<Caption>An example serverless Node.js function.</Caption>
-
-<Note>
-  The <InlineCode>@now/node</InlineCode> Builder also supports{' '}
-  <P.B>
-    <GenericLink href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">
-      asynchronous functions
-    </GenericLink>
-  </P.B>
-  , an example of which can be found in the <GenericLink href="/docs/v2/deployments/official-builders/node-js-now-node#request-and-response-objects">
-    Request and Response Objects
-  </GenericLink> section.
-</Note>
-
-The only step left is to define a build that will take this directory's entrypoint (`index.js`), build it and turn it into a lambda:
-
-```json
-{
-  "version": 2,
-  "builds": [{ "src": "api/hello/index.js", "use": "@now/node" }]
-}
-```
-
-<Caption>
-  An example <InlineCode>now.json</InlineCode> configuration using the{' '}
-  <InlineCode>@now/node</InlineCode> builder.
-</Caption>
-
-Our resulting deployment is here: <https://my-node-project-5gkn6kqfy.now.sh/>
-
-The example deployment above is open-source and you can view the code for it here: <https://my-node-project-5gkn6kqfy.now.sh/_src>
-
-You can pass query parameters to make the name change:
-
-<Image src={`https://assets.zeit.co/image/upload/v1545360454/front/docs/official-builders/serverless-node.png`}
-  width={1376/2}
-  height={882/2}
-/>
-<Caption>The lambda using the <InlineCode>name</InlineCode> query parameter to change the text using Node.js.</Caption>
-
 ## Deploying with Static Content
 
 You can upload static content along side your Node.js application by using [the `@now/static` builder](/docs/v2/deployments/official-builders/static-now-static).
