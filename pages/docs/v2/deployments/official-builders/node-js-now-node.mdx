@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T12:13:08.000Z'
+  lastEdited: '2019-06-12T12:40:26.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -160,24 +160,25 @@ We follow a set of rules to do so:
 
 In the rest of the cases, `req.body` is a node buffer that contains the content sent with the request.
 
-With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following lambda example accepts a JSON body in the POST request, and returns a stringified version of it:
+With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example accepts a JSON body in the POST request, and replies with a counter of how many times you sent a request to it:
 
 ```js
 module.exports = (req, res) => {
-  if (req.method !== 'POST') {
-    res.status(405)
-    res.json({ error: 'only POST requests are accepted' })
-    return
-  }
-
-  if (req.body) {
+  if (typeof req.body !== 'object') {
     res.status(400)
-    res.json({ error: 'no JSON object in the request' })
+    res.json({ error: 'No JSON object in the request' })
     return
   }
 
-  res.status(200)
-  res.send(JSON.stringify(req.body, null, 4))
+  const { action } = req.body
+
+  if (action !== 'ping') {
+    res.status(400)
+    res.json({ error: 'The value of `action` needs to be `ping`' })
+    return
+  }
+
+  res.json({ action: 'pong' })
 }
 ```
 
