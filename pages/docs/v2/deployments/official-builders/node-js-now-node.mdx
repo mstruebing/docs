@@ -16,7 +16,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-11T21:36:11.000Z'
+  lastEdited: '2019-06-12T08:25:33.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -46,9 +46,8 @@ The `index.js` file exports a Node.js function that takes in [the standard Node.
 const { parse } = require('url')
 
 module.exports = (req, res) => {
-  const { query } = parse(req.url, true)
-  const { name = 'World' } = query
-  res.end(`Hello ${name}!`)
+  const { name = 'World' } = req.query
+  res.send(`Hello ${name}!`)
 }
 ```
 
@@ -135,6 +134,9 @@ The entrypoint of this Builder is always a JavaScript file that exposes a functi
 ### Request and Response Objects
 
 For each invocation of a Node.js lambda, two objects, request and response, are passed to the function.
+These objects are the standard HTTP [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects given and used by Node.js.
+
+#### Helpers
 
 In addition to the standard Node.js [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) methods, we're providing a set of Express.js-like methods to make it even easier for you to build a new lambda function :
 
@@ -146,8 +148,6 @@ In addition to the standard Node.js [request](https://nodejs.org/api/http.html#h
 | `res.status(code)` | a function to set the status code sent with the response. `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) | response |
 | `res.send(body)`   | a function to set the content of the response. `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
 | `res.json(obj)`    | a function to send a JSON response                                                                                                                           | response |
-
-We leave the standard standard HTTP request and response objects untouched, so frameworks like [Express](http://expressjs.com/) or [micro](https://github.com/zeit/micro) will still work.
 
 The following lambda example accepts a JSON body in the POST request, and returns a stringified version of it:
 
@@ -165,11 +165,16 @@ module.exports = (req, res) => {
     return
   }
 
-  res.setHeader('content-type', 'application/json')
+  res.setHeader('content-type', 'text/plain')
   res.status(200)
   res.send(JSON.stringify(req.body, null, 4))
 }
 ```
+
+<Caption>
+  Example Node.js lambda using the `req.body` helper that returns a stringified
+  version of the JSON object sent in the request
+</Caption>
 
 <Note>
   You can opt-out of this behaviour by setting `helpers` to `false` in the
@@ -184,7 +189,36 @@ module.exports = (req, res) => {
   </GenericLink>.
 </Note>
 
-<Caption>Example Node.js lambda using the `req.body` helper provided</Caption>
+#### Using `req.body`
+
+#### Typescript support
+
+We provide types for the request and response objects.
+
+To install them, run:
+
+```
+yarn add @now/node --dev
+```
+
+Or if you're using `npm`:
+
+```
+npm install @now/node --save-dev
+```
+
+```ts
+import { NowRequest, NowResponse } from '@now/node'
+
+export default function(req: NowRequest, res: NowResponse) {
+  const { name = 'World' } = req.query
+  res.send(`Hello ${name}!`)
+}
+```
+
+<Caption>
+  Example "Hello World" Typescript lambda using the `req.query` helper
+</Caption>
 
 ### Dependencies Installation
 
@@ -224,7 +258,7 @@ You can run build tasks by creating a `now-build` script within a `package.json`
 <Code lang="js">{`const BuiltTime = require('./built-time')\n
 module.exports = (req, res) => {
   res.setHeader('content-type', 'text/plain');
-  res.end(\`
+  res.send(\`
     This Lambda was built at \${new Date(BuiltTime)}.
     The current time is \${new Date()}
   \`)
