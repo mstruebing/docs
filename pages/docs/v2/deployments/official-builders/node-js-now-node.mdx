@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T09:13:07.000Z'
+  lastEdited: '2019-06-12T09:54:16.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -99,7 +99,7 @@ These objects are the standard HTTP [request](https://nodejs.org/api/http.html#h
 
 In addition to the standard Node.js [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) methods, we're providing a set of Express.js-like methods to make it even easier for you to build a new lambda function :
 
-| property           | description                                                                                                                                                  | object   |
+| method             | description                                                                                                                                                  | object   |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
 | `req.query`        | an object containing the request [query string](https://en.wikipedia.org/wiki/Query_string)                                                                  | request  |
 | `req.cookies`      | an object containing the parsed cookies sent with the request                                                                                                | request  |
@@ -108,7 +108,59 @@ In addition to the standard Node.js [request](https://nodejs.org/api/http.html#h
 | `res.send(body)`   | a function to set the content of the response. `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
 | `res.json(obj)`    | a function to send a JSON response                                                                                                                           | response |
 
-The following lambda example accepts a JSON body in the POST request, and returns a stringified version of it:
+The following lambda example showcases the use of `req.query`, `req.cookies` and `req.body` helpers:
+
+```js
+module.exports = (req, res) => {
+  let who = 'anonymous'
+
+  if (req.body && req.body.who) {
+    who = req.body.who
+  } else if (req.query.who) {
+    who = req.query.who
+  } else if (req.cookies.who) {
+    who = req.cookies.who
+  }
+
+  res.status(200)
+  res.send(`hi ${who}, what's up?`)
+}
+```
+
+<Caption>
+  Example Node.js lambda using the <InlineCode>req.query</InlineCode>,{' '}
+  <InlineCode>req.cookies</InlineCode> and <InlineCode>req.body</InlineCode>{' '}
+  helpers. It returns greetings for the user specified using{' '}
+  <InlineCode>req.send()</InlineCode>.
+</Caption>
+
+<Note>
+  You can opt-out of this behaviour by setting <InlineCode>helpers</InlineCode>{' '}
+  to <InlineCode>false</InlineCode> in the configuration of the builder. If you
+  opt-out, request objects will be replaced by the standard HTTP{' '}
+  <GenericLink href="https://nodejs.org/api/http.html#http_event_request">
+    request
+  </GenericLink>{' '}
+  and{' '}
+  <GenericLink href="https://nodejs.org/api/http.html#http_class_http_serverresponse">
+    response
+  </GenericLink>
+  .
+</Note>
+
+### `req.body`
+
+We populate the `req.body` property on the request object with a parsed version of the content sent with the request when it is possible.
+
+We follow a set of rules to do so:
+
+- If no body is sent with the request, `req.body` is null
+- If the `Content-Type` header is set to `application/json`, the JSON sent with the request is parsed and `req.body` is an object containing it
+- If the `Content-Type` header is set to `application/x-www-form-urlencoded`, the query string sent with the request is parsed and `req.body` is an object containing it
+
+In the rest of the cases, `req.body` is a node buffer that contains the content sent with the request.
+
+With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following lambda example accepts a JSON body in the POST request, and returns a stringified version of it:
 
 ```js
 module.exports = (req, res) => {
@@ -134,19 +186,6 @@ module.exports = (req, res) => {
   Example Node.js lambda using the `req.body` helper that returns a stringified
   version of the JSON object sent in the request
 </Caption>
-
-<Note>
-  You can opt-out of this behaviour by setting `helpers` to `false` in the
-  configuration of the builder. If you opt-out, request objects will be replaced
-  by the standard HTTP{' '}
-  <GenericLink href="https://nodejs.org/api/http.html#http_event_request">
-    request
-  </GenericLink>{' '}
-  and
-  <GenericLink href="https://nodejs.org/api/http.html#http_class_http_serverresponse">
-    response
-  </GenericLink>.
-</Note>
 
 ### Typescript support
 
