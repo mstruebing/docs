@@ -16,7 +16,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T08:25:33.000Z'
+  lastEdited: '2019-06-12T08:26:22.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -50,6 +50,95 @@ module.exports = (req, res) => {
   res.send(`Hello ${name}!`)
 }
 ```
+
+## Request and Response Objects
+
+For each invocation of a Node.js lambda, two objects, request and response, are passed to the function.
+These objects are the standard HTTP [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects given and used by Node.js.
+
+### Helpers
+
+In addition to the standard Node.js [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) methods, we're providing a set of Express.js-like methods to make it even easier for you to build a new lambda function :
+
+| property           | description                                                                                                                                                  | object   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| `req.query`        | an object containing the request [query string](https://en.wikipedia.org/wiki/Query_string)                                                                  | request  |
+| `req.cookies`      | an object containing the parsed cookies sent with the request                                                                                                | request  |
+| `req.body`         | an object containing the body sent with the request, or `null` if no body is sent                                                                            | request  |
+| `res.status(code)` | a function to set the status code sent with the response. `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) | response |
+| `res.send(body)`   | a function to set the content of the response. `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
+| `res.json(obj)`    | a function to send a JSON response                                                                                                                           | response |
+
+The following lambda example accepts a JSON body in the POST request, and returns a stringified version of it:
+
+```js
+module.exports = (req, res) => {
+  if (req.method !== 'POST') {
+    res.status(405)
+    res.json({ error: 'only POST requests are accepted' })
+    return
+  }
+
+  if (req.body) {
+    res.status(400)
+    res.json({ error: 'no JSON object in the request' })
+    return
+  }
+
+  res.setHeader('content-type', 'text/plain')
+  res.status(200)
+  res.send(JSON.stringify(req.body, null, 4))
+}
+```
+
+<Caption>
+  Example Node.js lambda using the `req.body` helper that returns a stringified
+  version of the JSON object sent in the request
+</Caption>
+
+<Note>
+  You can opt-out of this behaviour by setting `helpers` to `false` in the
+  configuration of the builder. If you opt-out, request objects will be replaced
+  by the standard HTTP{' '}
+  <GenericLink href="https://nodejs.org/api/http.html#http_event_request">
+    request
+  </GenericLink>{' '}
+  and
+  <GenericLink href="https://nodejs.org/api/http.html#http_class_http_serverresponse">
+    response
+  </GenericLink>.
+</Note>
+
+### Using `req.body`
+
+### Typescript support
+
+We provide types for the request and response objects.
+
+To install them, run:
+
+```
+yarn add @now/node --dev
+```
+
+Or if you're using `npm`:
+
+```
+npm install @now/node --save-dev
+```
+
+```ts
+import { NowRequest, NowResponse } from '@now/node'
+
+export default function(req: NowRequest, res: NowResponse) {
+  const { name = 'World' } = req.query
+  res.send(`Hello ${name}!`)
+}
+```
+
+<Caption>
+  Example "Hello World" Typescript lambda using the `req.query` helper
+</Caption>
 
 <Caption>An example serverless Node.js function.</Caption>
 
@@ -130,95 +219,6 @@ The entrypoint of this Builder is always a JavaScript file that exposes a functi
   <InlineCode>@now/node</InlineCode> will automatically detect a `package.json`
   file to install dependencies at the entrypoint level or higher.
 </Note>
-
-### Request and Response Objects
-
-For each invocation of a Node.js lambda, two objects, request and response, are passed to the function.
-These objects are the standard HTTP [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) objects given and used by Node.js.
-
-#### Helpers
-
-In addition to the standard Node.js [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) methods, we're providing a set of Express.js-like methods to make it even easier for you to build a new lambda function :
-
-| property           | description                                                                                                                                                  | object   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| `req.query`        | an object containing the request [query string](https://en.wikipedia.org/wiki/Query_string)                                                                  | request  |
-| `req.cookies`      | an object containing the parsed cookies sent with the request                                                                                                | request  |
-| `req.body`         | an object containing the body sent with the request, or `null` if no body is sent                                                                            | request  |
-| `res.status(code)` | a function to set the status code sent with the response. `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) | response |
-| `res.send(body)`   | a function to set the content of the response. `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
-| `res.json(obj)`    | a function to send a JSON response                                                                                                                           | response |
-
-The following lambda example accepts a JSON body in the POST request, and returns a stringified version of it:
-
-```js
-module.exports = (req, res) => {
-  if (req.method !== 'POST') {
-    res.status(405)
-    res.json({ error: 'only POST requests are accepted' })
-    return
-  }
-
-  if (req.body) {
-    res.status(400)
-    res.json({ error: 'no JSON object in the request' })
-    return
-  }
-
-  res.setHeader('content-type', 'text/plain')
-  res.status(200)
-  res.send(JSON.stringify(req.body, null, 4))
-}
-```
-
-<Caption>
-  Example Node.js lambda using the `req.body` helper that returns a stringified
-  version of the JSON object sent in the request
-</Caption>
-
-<Note>
-  You can opt-out of this behaviour by setting `helpers` to `false` in the
-  configuration of the builder. If you opt-out, request objects will be replaced
-  by the standard HTTP{' '}
-  <GenericLink href="https://nodejs.org/api/http.html#http_event_request">
-    request
-  </GenericLink>{' '}
-  and
-  <GenericLink href="https://nodejs.org/api/http.html#http_class_http_serverresponse">
-    response
-  </GenericLink>.
-</Note>
-
-#### Using `req.body`
-
-#### Typescript support
-
-We provide types for the request and response objects.
-
-To install them, run:
-
-```
-yarn add @now/node --dev
-```
-
-Or if you're using `npm`:
-
-```
-npm install @now/node --save-dev
-```
-
-```ts
-import { NowRequest, NowResponse } from '@now/node'
-
-export default function(req: NowRequest, res: NowResponse) {
-  const { name = 'World' } = req.query
-  res.send(`Hello ${name}!`)
-}
-```
-
-<Caption>
-  Example "Hello World" Typescript lambda using the `req.query` helper
-</Caption>
 
 ### Dependencies Installation
 
