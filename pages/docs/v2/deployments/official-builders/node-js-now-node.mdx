@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T11:19:44.000Z'
+  lastEdited: '2019-06-12T12:13:08.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -101,12 +101,12 @@ In addition to the standard Node.js [request](https://nodejs.org/api/http.html#h
 
 | method             | description                                                                                                                                                       | object   |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `req.query`        | an object containing the request's [query string](https://en.wikipedia.org/wiki/Query_string), or `{}` if the request does not have a query string                | request  |
-| `req.cookies`      | an object containing the cookies sent by the request, or `{}` if the request contains no cookies                                                                  | request  |
-| `req.body`         | an object containing the body sent by the request, or `null` if no body is sent                                                                                   | request  |
-| `res.status(code)` | a function to set the status code sent with the response where `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) | response |
-| `res.send(body)`   | a function to set the content of the response where `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
-| `res.json(obj)`    | a function to send a JSON response where `obj` is the JSON object to send                                                                                         | response |
+| `req.query`        | An object containing the request's [query string](https://en.wikipedia.org/wiki/Query_string), or `{}` if the request does not have a query string                | request  |
+| `req.cookies`      | An object containing the cookies sent by the request, or `{}` if the request contains no cookies                                                                  | request  |
+| `req.body`         | An object containing the body sent by the request, or `null` if no body is sent                                                                                   | request  |
+| `res.status(code)` | A function to set the status code sent with the response where `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) | response |
+| `res.send(body)`   | A function to set the content of the response where `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
+| `res.json(obj)`    | A function to send a JSON response where `obj` is the JSON object to send                                                                                         | response |
 
 The following lambda example showcases the use of `req.query`, `req.cookies` and `req.body` helpers:
 
