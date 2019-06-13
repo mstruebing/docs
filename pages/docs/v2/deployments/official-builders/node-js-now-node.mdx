@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-13T13:22:00.000Z'
+  lastEdited: '2019-06-13T14:14:04.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -151,39 +151,36 @@ module.exports = (req, res) => {
 
 We populate the `req.body` property on the request object with a parsed version of the content sent with the request when it is possible.
 
-We follow a set of rules to do so:
+We follow a set of rules on the `Content-type` header sent by the request to do so:
 
-- If no body is sent with the request, `req.body` is null
-- If the `Content-Type` header is set to `application/json`, the JSON sent by the request is parsed and `req.body` is an object containing it
-- If the `Content-Type` header is set to `application/x-www-form-urlencoded`, the data by with the request is parsed and `req.body` is an object containing it
-- If the `Content-Type` header is set to `application/octet-stream`, `req.body` is a [Buffer](https://nodejs.org/api/buffer.html)
-- If the `Content-Type` header is set to `text/plain`, `req.body` is a string containing the text sent by the request
+| `Content-Type` header               | Value of `req.body`                                                                    |
+| ----------------------------------- | -------------------------------------------------------------------------------------- |
+| No header                           | `undefined`                                                                            |
+| `application/json`                  | An object representing the parsed JSON sent by the request                             |
+| `application/x-www-form-urlencoded` | An object representing the parsed data sent by with the request                        |
+| `text/plain`                        | A string containing the text sent by the request                                       |
+| `application/octet-stream`          | A [Buffer](https://nodejs.org/api/buffer.html) containing the data sent by the request |
 
-In the rest of the cases, `req.body` is `undefined`.
-
-With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example accepts a JSON body containing `{"action": "ping"}` in the POST request, and replies with a JSON object containing `{"action": "pong"}`:
+With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example reads `req.body` when it is string, it expects `ping` and returns `pong`:
 
 ```js
 module.exports = (req, res) => {
-  if (typeof req.body === 'undefined') {
-    return res.status(400).json({ error: 'No JSON object in the request' })
+  if (typeof req.body !== 'string') {
+    return res.status(400).text('Invalid request')
   }
 
-  const { action } = req.body
-
-  if (action !== 'ping') {
-    return res
-      .status(400)
-      .json({ error: 'The value of `action` needs to be `ping`' })
+  if (req.body !== 'ping') {
+    return res.status(400).json('The value expected is `ping`')
   }
 
-  res.status(200).json({ action: 'pong' })
+  res.status(200).send('pong')
 }
 ```
 
 <Caption>
   Example Node.js lambda using the <InlineCode>req.body</InlineCode> helper that
-  returns <InlineCode>{"action": "pong"}</InlineCode> when you send <InlineCode>{"action": "ping"}</InlineCode>
+  returns <InlineCode>pong</InlineCode> when you send{' '}
+  <InlineCode>ping</InlineCode>
 </Caption>
 
 ### Typescript support
