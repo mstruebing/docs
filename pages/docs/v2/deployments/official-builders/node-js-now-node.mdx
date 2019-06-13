@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-13T14:32:31.000Z'
+  lastEdited: '2019-06-13T15:10:54.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -99,14 +99,14 @@ These objects are the standard HTTP [request](https://nodejs.org/api/http.html#h
 
 In addition to the standard Node.js [request](https://nodejs.org/api/http.html#http_event_request) and [response](https://nodejs.org/api/http.html#http_class_http_serverresponse) methods, we're providing a set of helpers properties and methods to make it even easier for you to build a new lambda function:
 
-| method             | description                                                                                                                                                       | object   |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `req.query`        | An object containing the request's [query string](https://en.wikipedia.org/wiki/Query_string), or `{}` if the request does not have a query string                | request  |
-| `req.cookies`      | An object containing the cookies sent by the request, or `{}` if the request contains no cookies                                                                  | request  |
-| `req.body`         | An object containing the body sent by the request, or `null` if no body is sent                                                                                   | request  |
-| `res.status(code)` | A function to set the status code sent with the response where `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) | response |
-| `res.send(body)`   | A function to set the content of the response where `body` can be a `string`, an `object` or a `Buffer`                                                           | response |
-| `res.json(obj)`    | A function to send a JSON response where `obj` is the JSON object to send                                                                                         | response |
+| method             | description                                                                                                                                                                                    | object   |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `req.query`        | An object containing the request's [query string](https://en.wikipedia.org/wiki/Query_string), or `{}` if the request does not have a query string.                                            | request  |
+| `req.cookies`      | An object containing the cookies sent by the request, or `{}` if the request contains no cookies.                                                                                              | request  |
+| `req.body`         | An object containing the body sent by the request, or `null` if no body is sent.                                                                                                               | request  |
+| `res.status(code)` | A function to set the status code sent with the response where `code` must be a valid [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes). Returns `res` for chaining. | response |
+| `res.send(body)`   | A function to set the content of the response where `body` can be a `string`, an `object` or a `Buffer`.                                                                                       | response |
+| `res.json(obj)`    | A function to send a JSON response where `obj` is the JSON object to send.                                                                                                                     | response |
 
 The following lambda example showcases the use of `req.query`, `req.cookies` and `req.body` helpers:
 
