@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-13T14:14:04.000Z'
+  lastEdited: '2019-06-13T14:22:48.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -170,7 +170,7 @@ module.exports = (req, res) => {
   }
 
   if (req.body !== 'ping') {
-    return res.status(400).json('The value expected is `ping`')
+    return res.status(400).text('The value expected is `ping`')
   }
 
   res.status(200).send('pong')
