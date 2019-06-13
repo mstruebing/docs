@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-12T12:40:26.000Z'
+  lastEdited: '2019-06-13T13:22:00.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -122,8 +122,7 @@ module.exports = (req, res) => {
     who = req.cookies.who
   }
 
-  res.status(200)
-  res.send(`hi ${who}, what's up?`)
+  res.status(200).send(`hi ${who}, what's up?`)
 }
 ```
 
@@ -155,36 +154,36 @@ We populate the `req.body` property on the request object with a parsed version 
 We follow a set of rules to do so:
 
 - If no body is sent with the request, `req.body` is null
-- If the `Content-Type` header is set to `application/json`, the JSON sent with the request is parsed and `req.body` is an object containing it
-- If the `Content-Type` header is set to `application/x-www-form-urlencoded`, the query string sent with the request is parsed and `req.body` is an object containing it
+- If the `Content-Type` header is set to `application/json`, the JSON sent by the request is parsed and `req.body` is an object containing it
+- If the `Content-Type` header is set to `application/x-www-form-urlencoded`, the data by with the request is parsed and `req.body` is an object containing it
+- If the `Content-Type` header is set to `application/octet-stream`, `req.body` is a [Buffer](https://nodejs.org/api/buffer.html)
+- If the `Content-Type` header is set to `text/plain`, `req.body` is a string containing the text sent by the request
 
-In the rest of the cases, `req.body` is a node buffer that contains the content sent with the request.
+In the rest of the cases, `req.body` is `undefined`.
 
-With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example accepts a JSON body in the POST request, and replies with a counter of how many times you sent a request to it:
+With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example accepts a JSON body containing `{"action": "ping"}` in the POST request, and replies with a JSON object containing `{"action": "pong"}`:
 
 ```js
 module.exports = (req, res) => {
-  if (typeof req.body !== 'object') {
-    res.status(400)
-    res.json({ error: 'No JSON object in the request' })
-    return
+  if (typeof req.body === 'undefined') {
+    return res.status(400).json({ error: 'No JSON object in the request' })
   }
 
   const { action } = req.body
 
   if (action !== 'ping') {
-    res.status(400)
-    res.json({ error: 'The value of `action` needs to be `ping`' })
-    return
+    return res
+      .status(400)
+      .json({ error: 'The value of `action` needs to be `ping`' })
   }
 
-  res.json({ action: 'pong' })
+  res.status(200).json({ action: 'pong' })
 }
 ```
 
 <Caption>
   Example Node.js lambda using the <InlineCode>req.body</InlineCode> helper that
-  returns a stringified version of the JSON object sent in the request
+  returns <InlineCode>{"action": "pong"}</InlineCode> when you send <InlineCode>{"action": "ping"}</InlineCode>
 </Caption>
 
 ### Typescript support
