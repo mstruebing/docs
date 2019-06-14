@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-14T15:30:20.000Z'
+  lastEdited: '2019-06-14T17:39:59.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -251,6 +251,23 @@ For more information on including static files in your project, read the documen
 >
   Deploy static files along with lambdas.
 </Card>
+
+## Async support
+
+We support asynchronous functions out-of-the-box.
+
+```js
+module.exports = async (req, res) => {
+  const count = await db.query(`
+    SELECT COUNT(*)
+    AS entries
+    FROM table
+  `)
+  res.send({ count })
+}
+```
+
+<Caption>An example showcasing the use of an asynchronous function.</Caption>
 
 ## Technical Details
 
