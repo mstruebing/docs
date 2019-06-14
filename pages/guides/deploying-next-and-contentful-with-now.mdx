@@ -19,7 +19,7 @@ export const meta = {
     process.env.ASSETS
   }/guides/deploying-next-contentful-with-now/deploying-next-contentful-with-now.png`,
   editUrl: 'pages/guides/deploying-next-and-contentful-with-now.mdx',
-  lastEdited: '2019-06-14T16:59:36.000Z'
+  lastEdited: '2019-06-14T17:19:49.000Z'
 }
 
 In this guide, you will discover how to create a [Next.js](https://nextjs.org/) app that displays links to [ZEIT blog posts](/blog) by utilizing the [Contentful](https://www.contentful.com/) client, before deploying **with just a single command** to [ZEIT Now](/docs/v2).
@@ -47,7 +47,7 @@ From your [Contentful Spaces dashboard](https://app.contentful.com/spaces/), cre
 - `image`
 - `url`
 
-Next, using the **Content** tab, using the **Add Post** button to create a post, providing the relevant details.
+Next, using the **Content** tab, click the **Add Post** button to create a post, providing the relevant details.
 
 That's it for creating content! You can edit both the **Content** and **Content Model** at any time, giving you complete flexibility over your content.
 
@@ -161,9 +161,9 @@ export default HomePage
 
 Let's take look at what this file achieves.
 
-Firstly, it requires the `contentful` dependency and creates a client, this provides access to many [useful helper methods](https://github.com/contentful/boilerplate-javascript) for retrieving content from [Contentful](https://www.contentful.com/) .
+Firstly, it requires the `contentful` dependency and creates a client, this provides access to many [useful helper methods](https://github.com/contentful/boilerplate-javascript) for retrieving content from [Contentful](https://www.contentful.com/).
 
-Inside the `HomePage` function, two asynchronous functions are defined, these are then called in the `useEffect` hook to retrieve the posts.
+Inside the `HomePage` function, two asynchronous functions are defined, these are then called in the `useEffect` hook to retrieve the posts on initial load.
 
 <Note>
   These functions are simplified versions taken from the{' '}
@@ -300,7 +300,7 @@ With your application ready, it is time to deploy it using **just a single comma
   Using the <InlineCode>now</InlineCode> command to deploy your project to Now.
 </Caption>
 
-You will see a short build step in your terminal followed by the news that your project has been [deployed](https://zeit.co/docs/v2/deployments/basics/), it should look similar to this: <https://nextjs-contentful.now.sh/>
+You will see a short build step in your terminal followed by the news that your project has been [deployed](https://zeit.co/docs/v2/deployments/basics/), it should look similar to the [example app](https://nextjs-contentful.now.sh/).
 
 ## Resources
 
