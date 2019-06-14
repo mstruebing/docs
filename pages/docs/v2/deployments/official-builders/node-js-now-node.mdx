@@ -161,7 +161,7 @@ We follow a set of rules on the `Content-type` header sent by the request to do 
 | `text/plain`                        | A string containing the text sent by the request.                                       |
 | `application/octet-stream`          | A [Buffer](https://nodejs.org/api/buffer.html) containing the data sent by the request. |
 
-With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example reads `req.body` when it is string, it expects `ping` and returns `pong`:
+With the `req.body` helper, you can build applications without extra dependencies or having to [parse the content of the request manually](https://nodejs.org/ja/docs/guides/anatomy-of-an-http-transaction/#request-body). The following example inspects `req.body`, if it is 'ping', it will return 'pong'.
 
 ```js
 module.exports = (req, res) => {
