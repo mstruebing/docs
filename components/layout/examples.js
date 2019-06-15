@@ -225,7 +225,7 @@ class ExamplesPage extends React.Component {
         <style jsx>{`
           ul {
             list-style: none;
-            margin-top: 0;
+            margin: 0;
             padding: 0;
           }
 
