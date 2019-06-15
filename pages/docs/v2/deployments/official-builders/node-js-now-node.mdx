@@ -15,7 +15,7 @@ export const meta = {
   description:
     'The official Node.js Builder for ZEIT Now. Deploy serverless Node.js applications with ease.',
   editUrl: 'pages/docs/v2/deployments/official-builders/node-js-now-node.mdx',
-  lastEdited: '2019-06-14T17:39:59.000Z'
+  lastEdited: '2019-06-15T12:27:44.000Z'
 }
 
 <Tag>Status: Stable</Tag>
@@ -42,8 +42,6 @@ Inside `my-node-project > api > hello` we will create an `index.js` file.
 The `index.js` file exports a Node.js function that takes in [the standard Node.js request and response](#request-and-response-objects) objects:
 
 ```js
-const { parse } = require('url')
-
 module.exports = (req, res) => {
   const { name = 'World' } = req.query
   res.send(`Hello ${name}!`)
